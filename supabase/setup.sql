@@ -17,7 +17,7 @@ create table public.profiles (
   full_name text,
   email text not null,
   role public.user_role default 'employee'::public.user_role not null,
-  department text,
+  user_dpt text,
   manager_id uuid references public.profiles(id) on delete set null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );

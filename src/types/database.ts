@@ -15,6 +15,8 @@ export interface Database {
           email: string
           full_name: string | null
           role: 'admin' | 'employee' | 'manager'
+          user_dpt: string | null
+          manager_id: string | null
           created_at: string
         }
         Insert: {
@@ -22,6 +24,8 @@ export interface Database {
           email: string
           full_name?: string | null
           role?: 'admin' | 'employee' | 'manager'
+          user_dpt?: string | null
+          manager_id?: string | null
           created_at?: string
         }
         Update: {
@@ -29,6 +33,8 @@ export interface Database {
           email?: string
           full_name?: string | null
           role?: 'admin' | 'employee' | 'manager'
+          user_dpt?: string | null
+          manager_id?: string | null
           created_at?: string
         }
         Relationships: []
