@@ -34,14 +34,19 @@ export async function GET(request: Request) {
         }
       )
 
-      await authenticatedSupabase
+      // Using insert + error handling instead of upsert to avoid 42P10 missing constraint error
+      const { error: syncError } = await authenticatedSupabase
         .from('profiles')
-        .upsert({
+        .insert({
           id: user.id,
           email: user.email!,
           full_name: fullName,
           role: 'employee',
-        }, { onConflict: 'id' });
+        });
+        
+      if (syncError && syncError.code !== '23505') {
+        console.error('Auth Callback: Profile sync error', syncError);
+      }
 
       return NextResponse.redirect(`${origin}${next}`)
     }

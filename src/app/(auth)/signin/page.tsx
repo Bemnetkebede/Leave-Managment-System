@@ -39,10 +39,10 @@ export default function LoginPage() {
         if (profileError && profileError.code === 'PGRST116') {
           console.log('Profile missing for authenticated user, attempting auto-recovery...');
 
-          // 2. Auto-recovery: Create the profile if missing
+          // Using insert instead of upsert to avoid the 42P10 constraint error.
           const { error: recoveryError } = await (supabase as any)
             .from('profiles')
-            .upsert({
+            .insert({
               id: data.user.id,
               email: data.user.email!,
               full_name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0] || 'User',

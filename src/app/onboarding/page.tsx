@@ -109,30 +109,36 @@ export default function OnboardingPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not found');
 
-      const { data, error: updateError } = await supabase
+      const fullName = (user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0]);
+      
+      // Ensure full_name is strictly a string!
+      const nameToSend = typeof fullName === 'string' ? fullName : '';
+
+      // Nuclear Fix: Using atomic upsert with ignoreDuplicates: false to force recognition
+      const { error: onboardingError } = await (supabase as any)
         .from('profiles')
-        .update({ user_dpt: selectedDept })
-        .eq('id', user.id)
-        .select();
+        .upsert({
+          id: user.id,
+          email: user.email || '',
+          full_name: nameToSend,
+          user_dpt: selectedDept,
+          updated_at: new Date().toISOString()
+        }, { 
+          onConflict: 'id',
+          ignoreDuplicates: false
+        });
 
-      if (updateError) throw updateError;
-
-      if (!data || data.length === 0) {
-        // Fallback: If profile wasn't created by trigger, upsert it.
-        const { error: upsertError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: user.id,
-            email: user.email || '',
-            user_dpt: selectedDept
-          });
-          
-        if (upsertError) throw upsertError;
+      if (onboardingError) {
+        console.error('Onboarding Error:', onboardingError);
+        throw onboardingError;
       }
 
       window.location.href = '/dashboard';
     } catch (err: any) {
-      setError(err.message || 'Failed to update department');
+      console.error('Onboarding Error Details:', err);
+      // Display more specific error if available
+      const detailedError = err.message || err.details || 'Failed to update department';
+      setError(detailedError);
       setSaving(false);
     }
   };

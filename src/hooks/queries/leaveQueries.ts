@@ -65,3 +65,30 @@ export function useTeamRequests() {
     }
   })
 }
+
+export function useLeaveStats(year?: number) {
+  const supabase = createClient()
+  const currentYear = year || new Date().getFullYear()
+  
+  return useQuery({
+    queryKey: ['leaveStats', currentYear],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+      
+      const { data, error } = await supabase.rpc('get_user_leave_stats', {
+        p_user_id: user.id,
+        p_year: currentYear
+      })
+        
+      if (error) throw error
+      return data as {
+        total: number
+        used: number
+        balance: number
+        pending: number
+        distribution: Array<{ name: string; value: number }>
+      }
+    }
+  })
+}

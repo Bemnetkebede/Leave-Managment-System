@@ -4,71 +4,39 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, Bell } from "lucide-react";
 import { Sidebar } from "./sidebar";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { useProfile } from "@/hooks/use-profile";
 
-interface UserProfile {
-  full_name: string | null;
-  email: string | null;
-}
+/** Safely extracts up to 2 initials from any value */
+const getInitials = (name: unknown): string => {
+  const str = typeof name === "string" && name.trim().length > 0 ? name.trim() : "U";
+  return str
+    .split(" ")
+    .map((n) => n[0] ?? "")
+    .join("")
+    .toUpperCase()
+    .substring(0, 2) || "U";
+};
 
 export function Header() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const supabase = createClient();
+  const { profile, displayName } = useProfile();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        // Try to fetch from the public.profiles table to verify DB integration
-        const { data: dbProfile, error: dbError } = await (supabase as any)
-          .from('profiles')
-          .select('full_name, email')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        if (dbProfile) {
-          setProfile({
-            full_name: dbProfile.full_name,
-            email: dbProfile.email
-          });
-        } else {
-          // Fallback to Auth metadata but log that DB sync is missing
-          console.warn("Header: User authenticated but no profile found in 'public.profiles'");
-          setProfile({
-            full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || "User",
-            email: user.email || ""
-          });
-        }
-      }
-    };
-    fetchUser();
-  }, [supabase]);
-
   const handleLogout = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/login");
+    router.push("/signin");
     router.refresh();
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(n => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
   };
 
   return (
@@ -86,8 +54,8 @@ export function Header() {
             <Sidebar mobile />
           </SheetContent>
         </Sheet>
-        
-        {/* Mobile Brand context */}
+
+        {/* Mobile Brand */}
         <div className="flex md:hidden items-center gap-2 font-bold text-xl text-indigo-600">
           LMS
         </div>
@@ -97,13 +65,16 @@ export function Header() {
         <Button variant="ghost" size="icon" className="text-slate-500 hover:text-slate-900">
           <Bell className="h-5 w-5" />
         </Button>
-      
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-9 w-9 rounded-full ml-1 border hover:bg-slate-100">
+            <Button
+              variant="ghost"
+              className="relative h-9 w-9 rounded-full ml-1 border hover:bg-slate-100"
+            >
               <Avatar className="h-9 w-9">
                 <AvatarFallback className="bg-indigo-100 text-indigo-700 font-medium">
-                  {profile ? getInitials(profile.full_name || "U") : "U"}
+                  {getInitials(displayName)}
                 </AvatarFallback>
               </Avatar>
             </Button>
@@ -111,19 +82,19 @@ export function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none text-slate-900">{profile?.full_name || "Guest"}</p>
-                <p className="text-xs leading-none text-slate-500">{profile?.email || ""}</p>
+                <p className="text-sm font-medium leading-none text-slate-900">
+                  {displayName}
+                </p>
+                <p className="text-xs leading-none text-slate-500">
+                  {profile?.email ?? ""}
+                </p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
-              Profile Setup
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              Preferences
-            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Profile Setup</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">Preferences</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               className="text-red-600 cursor-pointer font-medium hover:bg-red-50 hover:text-red-700"
               onClick={handleLogout}
             >
