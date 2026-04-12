@@ -1,22 +1,38 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+<<<<<<< HEAD
 import { createClient as createServiceClient } from '@supabase/supabase-js';
+=======
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 
 export async function POST(request: Request) {
   try {
     const supabase = createClient();
+<<<<<<< HEAD
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
+=======
+    
+    // Authenticate the user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+<<<<<<< HEAD
     const { leave_type, start_date, end_date, reason } = await request.json();
+=======
+    const body = await request.json();
+    const { leave_type, start_date, end_date, reason } = body;
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 
     if (!leave_type || !start_date || !end_date || !reason) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+<<<<<<< HEAD
     const serviceClient = createServiceClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -44,19 +60,34 @@ export async function POST(request: Request) {
       .from('leave_requests')
       .insert({
         user_id: user.id,
+=======
+    // Insert new leave request
+    const { data, error } = await (supabase
+      .from('leave_requests')
+      .insert({
+        user_id: user.id, // Set automatically from secure session
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
         leave_type,
         start_date,
         end_date,
         reason,
+<<<<<<< HEAD
         status: 'pending'
       })
       .select()
       .single();
+=======
+        status: 'pending' // Defaulting safely
+      } as any)
+      .select()
+      .single() as any);
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
+<<<<<<< HEAD
     // 3. Notify All Managers/Admins
     try {
       const { data: profile } = await serviceClient
@@ -91,6 +122,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (error: any) {
     console.error('API Error /api/leave/create:', error);
+=======
+    return NextResponse.json({ success: true, data }, { status: 201 });
+  } catch (error: any) {
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }

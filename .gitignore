@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 node_modules/
 .next/
 build/
 dist/
 .env
 .env.local
+=======
+node_modules
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b

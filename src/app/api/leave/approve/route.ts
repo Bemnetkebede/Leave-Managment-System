@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+<<<<<<< HEAD
 import { createClient as createServiceClient } from '@supabase/supabase-js';
 
 export async function PATCH(request: Request) {
@@ -8,14 +9,30 @@ export async function PATCH(request: Request) {
     const supabase = createClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
+=======
+
+export async function PATCH(request: Request) {
+  try {
+    const supabase = createClient();
+    
+    // Authenticate the user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+<<<<<<< HEAD
     // Step 2: Verify the caller has manager/admin role
     const { data: profile, error: profileError } = await (supabase
       .from('profiles')
       .select('role')
+=======
+    // Role verification
+    const { data: profile, error: profileError } = await (supabase
+      .from('profiles')
+      .select('*')
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
       .eq('id', user.id)
       .single() as any);
 
@@ -23,12 +40,20 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
     }
 
+<<<<<<< HEAD
+=======
+    // Enforce 403 Forbidden for insufficient roles
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     const role = (profile as any).role as string;
     if (role !== 'manager' && role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden: Requires manager or admin role' }, { status: 403 });
     }
 
+<<<<<<< HEAD
     // Step 3: Parse the request body
+=======
+    // Parse specific payload required for patch
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     const body = await request.json();
     const { request_id, status, manager_note } = body;
 
@@ -37,6 +62,7 @@ export async function PATCH(request: Request) {
     }
 
     if (!['approved', 'rejected'].includes(status)) {
+<<<<<<< HEAD
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
@@ -120,6 +146,26 @@ export async function PATCH(request: Request) {
       console.warn('Failed to send employee notification:', notifErr);
     }
 
+=======
+      return NextResponse.json({ error: 'Invalid status. Must be approved or rejected.' }, { status: 400 });
+    }
+
+    // Update operation
+    const { data, error } = await (supabase
+      .from('leave_requests')
+      .update({
+        status,
+        manager_note
+      } as any)
+      .eq('id', request_id)
+      .select()
+      .single() as any);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });

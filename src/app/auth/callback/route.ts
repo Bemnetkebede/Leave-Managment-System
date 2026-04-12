@@ -13,11 +13,19 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = createClient()
     const { data: exchangeData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+<<<<<<< HEAD
 
     if (!exchangeError && exchangeData.user && exchangeData.session) {
       const user = exchangeData.user;
       const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.user_metadata?.given_name || user.email?.split('@')[0] || 'User';
 
+=======
+    
+    if (!exchangeError && exchangeData.user && exchangeData.session) {
+      const user = exchangeData.user;
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || user.user_metadata?.given_name || user.email?.split('@')[0] || 'User';
+      
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
       console.log('Auth Callback: Syncing profile for user', { id: user.id, fullName })
 
       // Manual Profile Sync (Safety Net)
@@ -43,14 +51,22 @@ export async function GET(request: Request) {
           full_name: fullName,
           role: 'employee',
         });
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
       if (syncError && syncError.code !== '23505') {
         console.error('Auth Callback: Profile sync error', syncError);
       }
 
       return NextResponse.redirect(`${origin}${next}`)
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     console.error('Auth Callback: Exchange error', exchangeError)
     return NextResponse.redirect(`${origin}/login?error=auth_exchange_failed&error_description=${encodeURIComponent(exchangeError?.message || 'Exchange failed')}`)
   }
