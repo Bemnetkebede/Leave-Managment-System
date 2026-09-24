@@ -98,7 +98,7 @@ export default function AdminDashboardPage() {
                 <h3 className="text-lg font-bold text-slate-800">Organizational Status: {availability === 100 ? 'Healthy' : 'Active Management'}</h3>
                 <p className="text-sm text-slate-500 mt-1">
                   {availability < 100 
-                    ? `${allRequests.filter(r => r.status === 'approved' && today >= new Date(r.start_date) && today <= new Date(r.end_date)).length} members are currently out of office. Capacity is at ${availability}%.`
+                    ? `${(allRequests || []).filter(r => r.status === 'approved' && today >= new Date(r.start_date) && today <= new Date(r.end_date)).length} members are currently out of office. Capacity is at ${availability}%.`
                     : "Resource allocation is optimal for the current organizational size."}
                 </p>
               </div>
