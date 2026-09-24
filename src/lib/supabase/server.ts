@@ -16,20 +16,12 @@ export function createClient() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options });
-<<<<<<< HEAD
           } catch (error) { }
-=======
-          } catch (error) {}
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: '', ...options });
-<<<<<<< HEAD
           } catch (error) { }
-=======
-          } catch (error) {}
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
         },
       },
     }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { createClient } from '@/lib/supabase/client'
 import { LeaveRequest, LeaveBalance, Profile } from '@/types'
@@ -6,14 +5,6 @@ import { LeaveRequest, LeaveBalance, Profile } from '@/types'
 const supabase = createClient()
 
 export function useLeaveRequests() {
-=======
-import { useQuery } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase/client'
-import { LeaveRequest, LeaveBalance } from '@/types'
-
-export function useLeaveRequests() {
-  const supabase = createClient()
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
   return useQuery({
     queryKey: ['leaveRequests'],
     queryFn: async () => {
@@ -27,21 +18,13 @@ export function useLeaveRequests() {
         .order('created_at', { ascending: false })
         
       if (error) throw error
-<<<<<<< HEAD
       return (data || []) as LeaveRequest[]
-=======
-      return data as LeaveRequest[]
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     },
     staleTime: 5 * 60 * 1000 // 5 minutes
   })
 }
 
 export function useLeaveBalance() {
-<<<<<<< HEAD
-=======
-  const supabase = createClient()
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
   return useQuery({
     queryKey: ['leaveBalance'],
     queryFn: async () => {
@@ -56,17 +39,12 @@ export function useLeaveBalance() {
         .eq('year', currentYear)
         
       if (error) throw error
-<<<<<<< HEAD
       return (data || []) as LeaveBalance[]
-=======
-      return data as LeaveBalance[]
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     }
   })
 }
 
 export function useTeamRequests() {
-<<<<<<< HEAD
   return useQuery({
     queryKey: ['teamRequests'],
     queryFn: async () => {
@@ -192,52 +170,21 @@ export function useTeamMembers() {
         
       if (error) throw error
       return (data || []) as Profile[]
-=======
-  const supabase = createClient()
-  return useQuery({
-    queryKey: ['teamRequests'],
-    queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-      
-      // Depending on your actual DB schema, replace 'manager_id' with the correct relation if necessary
-      const { data, error } = await supabase
-        .from('leave_requests')
-        .select('*')
-        .eq('manager_id', user.id)
-        .eq('status', 'pending')
-        .order('created_at', { ascending: false })
-        
-      if (error) throw error
-      return data as LeaveRequest[]
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
     }
   })
 }
 
 export function useLeaveStats(year?: number) {
-<<<<<<< HEAD
-=======
-  const supabase = createClient()
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
   const currentYear = year || new Date().getFullYear()
   
   return useQuery({
     queryKey: ['leaveStats', currentYear],
     queryFn: async () => {
-<<<<<<< HEAD
       const { data: { user: authUser } } = await supabase.auth.getUser()
       if (!authUser) throw new Error('Not authenticated')
       
       const { data, error } = await supabase.rpc('get_user_leave_stats', {
         p_user_id: authUser.id,
-=======
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-      
-      const { data, error } = await supabase.rpc('get_user_leave_stats', {
-        p_user_id: user.id,
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
         p_year: currentYear
       })
         
@@ -252,7 +199,6 @@ export function useLeaveStats(year?: number) {
     }
   })
 }
-<<<<<<< HEAD
 
 export function useInitializeDepartment() {
   const queryClient = useQueryClient()
@@ -302,5 +248,3 @@ export function useInitializeDepartment() {
     }
   });
 }
-=======
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b

@@ -1,17 +1,11 @@
 import Link from 'next/link';
-<<<<<<< HEAD
 import { createClient } from '@/lib/supabase/server';
 
 export default async function LandingLayout({
-=======
-
-export default function LandingLayout({
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
   children,
 }: {
   children: React.ReactNode;
 }) {
-<<<<<<< HEAD
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -54,16 +48,6 @@ export default function LandingLayout({
                 </Link>
               </>
             )}
-=======
-  return (
-    <div className="min-h-screen bg-white">
-      {/* Header Placeholder */}
-      <header className="border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="font-bold text-xl text-indigo-600">LMS</div>
-          <nav className="flex space-x-4">
-            <Link href="/signin" className="text-gray-600 hover:text-gray-900 font-medium">Sign in</Link>
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
           </nav>
         </div>
       </header>

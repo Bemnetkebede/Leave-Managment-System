@@ -41,7 +41,13 @@ export default function AdminDashboardPage() {
     return (
       <div className="space-y-8 animate-in fade-in duration-500">
         <div className="h-8 w-64 bg-slate-200 rounded-lg animate-pulse" />
-        <TeamStatsOverview loading={true} />
+        <TeamStatsOverview
+          pendingCount={0}
+          acceptedCount={0}
+          rejectedCount={0}
+          availability={0}
+          loading={true}
+        />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 h-[400px] bg-slate-100 rounded-[2rem] animate-pulse" />
           <div className="h-[400px] bg-slate-100 rounded-[2rem] animate-pulse" />

@@ -145,7 +145,7 @@ export function AnalyticsCharts({ requests }: AnalyticsChartsProps) {
                 dataKey="value"
               >
                 {distributionData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} cornerRadius={10} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -179,7 +179,7 @@ export function AnalyticsCharts({ requests }: AnalyticsChartsProps) {
               <Tooltip 
                     cursor={{fill: '#f8fafc'}}
                     contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}}
-                    formatter={(value: number) => [`${value}%`, 'Percentage']}
+                    formatter={(value: any) => [`${value}%`, 'Percentage']}
               />
               <Bar 
                 dataKey="percentage" 

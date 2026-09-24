@@ -70,11 +70,8 @@ export function useProfile() {
         const rawName = data?.full_name || user.user_metadata?.full_name || user.user_metadata?.name;
         const fullName = Array.isArray(rawName) ? rawName[0] : rawName;
         const resolved = resolveDisplayName(fullName, user.email);
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
+
         // Calculate First Name for banner
         if (typeof fullName === "string" && fullName.trim().length > 0) {
           setFirstName(fullName.trim().split(" ")[0]);
@@ -94,11 +91,8 @@ export function useProfile() {
 
         setProfile(data || null);
         setDisplayName(resolved);
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
+
         console.log("Profile Sync Check:", {
           db_full_name: data?.full_name,
           auth_metadata_name: user.user_metadata?.full_name,

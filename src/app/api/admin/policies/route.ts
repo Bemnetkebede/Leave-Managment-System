@@ -4,11 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 export async function GET() {
   try {
     const supabase = createClient();
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
+
     // Authenticate the user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -53,8 +50,5 @@ export async function GET() {
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
   }
 }
-<<<<<<< HEAD
 
-=======
- 
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
+

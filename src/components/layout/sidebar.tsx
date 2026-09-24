@@ -10,51 +10,19 @@ import {
   Settings,
   Briefcase,
   LogOut,
-<<<<<<< HEAD
   ClipboardList,
   CheckCircle2,
   Users
-=======
-  ClipboardList
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useLeaveBalance } from "@/hooks/queries/leaveQueries";
 import { useRouter } from "next/navigation";
-<<<<<<< HEAD
 import { useProfile } from "@/hooks/use-profile";
-=======
-
-const routes = [
-  {
-    label: "Dashboard",
-    icon: LayoutDashboard,
-    href: "/dashboard",
-  },
-  {
-    label: "Requests",
-    icon: ClipboardList,
-    href: "/request",
-  },
-  {
-    label: "History",
-    icon: History,
-    href: "/history",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/settings",
-  },
-
-];
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 
 export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
-<<<<<<< HEAD
   const { profile } = useProfile();
 
   const isManager = profile?.role === 'manager' || profile?.role === 'admin';
@@ -121,8 +89,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       href: "/settings",
     },
   ];
-=======
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -135,14 +101,9 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   // No frontend calculations — read directly from DB columns
   const firstBalance = balances?.[0] as any;
   const used = firstBalance?.used_days ?? 0;
-<<<<<<< HEAD
   const available = firstBalance?.Balance ?? firstBalance?.balance ?? 21;
   // User requested (Available/Total). Total should be the budgeted amount from DB.
   const total = firstBalance?.total_days ?? 23;
-=======
-  const total = firstBalance?.total_days ?? 21;
-  const available = firstBalance?.Balance ?? firstBalance?.balance ?? total;
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
   const percentage = total > 0 ? Math.round((used / total) * 100) : 0;
 
   return (
@@ -163,16 +124,12 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
 <div className="flex-1 overflow-y-auto py-6 pl-4 pr-0"> 
   <nav className="space-y-1">
     {routes.map((route) => {
-<<<<<<< HEAD
       // Precise active state logic: 
       // 1. Exact match
       // 2. For sub-routes, ensure we don't accidentally highlight the base dashboard while in a specific manager module
       const isActive = route.href === dashboardHref 
         ? pathname === dashboardHref 
         : (pathname === route.href || pathname.startsWith(`${route.href}/`));
-=======
-      const isActive = pathname === route.href || pathname.startsWith(`${route.href}/`);
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
       
       return (
         <Link
@@ -211,7 +168,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   </nav>
 </div>
       
-<<<<<<< HEAD
       {/* Static snapshot widget (Only for employees) */}
       {!isManager && (
         <div className="mt-auto p-4 border-t border-slate-800 space-y-4">
@@ -233,25 +189,6 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       )}
       
       <div className={cn("mt-auto p-4 border-t border-slate-800", isManager && "mt-0 pt-0 border-none")}>
-=======
-      {/* Static snapshot widget */}
-      <div className="mt-auto p-4 border-t border-slate-800 space-y-4">
-        <div className="bg-slate-800/50 rounded-xl p-3 border border-slate-700/50">
-          <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Annual Balance</p>
-          <div className="mt-3 flex items-center justify-between gap-3">
-            <div className="flex-1 bg-slate-900 rounded-full h-1.5 overflow-hidden">
-              <div 
-                className="bg-indigo-500 h-full rounded-full transition-all duration-1000 ease-out" 
-                style={{ width: `${percentage}%` }}
-              ></div>
-            </div>
-            <span className="text-[11px] text-white font-bold whitespace-nowrap tabular-nums">
-              {available} / {total} days
-            </span>
-          </div>
-        </div>
-        
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
         <button 
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-3 rounded-lg bg-slate-800/50 px-3 py-3 text-sm font-bold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg active:scale-[0.98] group border border-slate-700/50"

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-<<<<<<< HEAD
 import { createClient } from '@/lib/supabase/server';
 
 export default async function LandingPage() {
@@ -16,7 +15,7 @@ export default async function LandingPage() {
           Modern <span className="text-indigo-500">Leave Management</span> for your team
         </h1>
         <p className="mt-8 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Streamline time-off requests, track balances, and manage your team's
+          Streamline time-off requests, track balances, and manage your team&apos;s
           availability all in one place with our intuitive Leave Management System.
         </p>
         <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -30,24 +29,6 @@ export default async function LandingPage() {
             href={primaryAction}
             className="px-10 py-4 rounded-full bg-white text-[#0D1A2C] border-2 border-slate-100 font-bold hover:border-indigo-100 hover:bg-indigo-50/30 transition-all duration-300 w-full sm:w-auto text-center"
           >
-=======
-
-export default function LandingPage() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-20">
-      <div className="text-center max-w-3xl">
-        <h1 className="text-5xl font-extrabold text-gray-900 sm:text-6xl tracking-tight">
-          Modern <span className="text-indigo-600">Leave Management</span> for your team
-        </h1>
-        <p className="mt-6 text-xl text-gray-500 max-w-2xl mx-auto">
-          Streamline time-off requests, track balances, and manage your team's availability all in one place with our intuitive Leave Management System.
-        </p>
-        <div className="mt-10 flex gap-4 justify-center">
-          <Link href="/signup" className="px-8 py-3 rounded-md bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
-            Get Started
-          </Link>
-          <Link href="/dashboard" className="px-8 py-3 rounded-md bg-white text-indigo-600 border border-gray-300 font-medium hover:bg-gray-50 transition-colors">
->>>>>>> 216fc4495fa2672be9db4277c8591826e7bdd72b
             View Dashboard
           </Link>
         </div>
