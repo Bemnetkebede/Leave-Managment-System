@@ -34,7 +34,7 @@ export default function DashboardOverviewPage() {
 
   // Use values from both the balance table and the stats function
   const metrics = {
-    available: stats?.[0]?.Balance ?? stats?.[0]?.balance ?? 0,
+    available: stats?.[0]?.balance ?? 0,
     taken: stats?.[0]?.used_days ?? 0,
     pending: allRequests?.filter(r => r.status === 'pending').length ?? 0
   };
