@@ -105,7 +105,7 @@ export function RequestCard({
              </p>
              <Textarea 
                placeholder="Type your notes here..." 
-               className="text-sm min-h-[80px] bg-white border-slate-200 rounded-xl mb-3 focus:ring-[#0D1A2C]"
+               className="text-sm text-slate-900 min-h-[80px] bg-white border-slate-200 rounded-xl mb-3 focus:ring-[#0D1A2C]"
                value={note}
                onChange={(e) => setNote(e.target.value)}
                disabled={isProcessing}

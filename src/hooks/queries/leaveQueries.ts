@@ -51,31 +51,29 @@ export function useTeamRequests() {
       const { data: { user: authUser } } = await supabase.auth.getUser()
       if (!authUser) throw new Error('Not authenticated')
       
-      // AUTO-ADOPTION: If manager has no team, claim unassigned employees
-      const { data: existingTeam } = await supabase
+      // 1. Fetch the current manager's profile to get their department
+      const { data: managerProfile } = await supabase
         .from('profiles')
-        .select('id')
-        .eq('manager_id', authUser.id)
-        .neq('id', authUser.id);
-
-      if (!existingTeam || existingTeam.length === 0) {
-        // Find and link unassigned profiles silently
-        await supabase
-          .from('profiles')
-          .update({ manager_id: authUser.id })
-          .is('manager_id', null)
-          .neq('id', authUser.id);
-      }
+        .select('user_dpt, role')
+        .eq('id', authUser.id)
+        .single();
       
-      // 1. Fetch ALL profiles in the database
-      const { data: members, error: mError } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, manager_id');
+      const managerDpt = managerProfile?.user_dpt;
+
+      // 2. Fetch ALL profiles in the manager's department
+      // (If admin, fetch all profiles)
+      let profileQuery = supabase.from('profiles').select('id, full_name, email, manager_id, user_dpt');
+      
+      if (managerProfile?.role !== 'admin' && managerDpt) {
+        profileQuery = profileQuery.eq('user_dpt', managerDpt);
+      }
+
+      const { data: members, error: mError } = await profileQuery;
         
       if (mError) throw mError;
       const memberIds = members?.map(m => m.id) || [];
       
-      // Guarantee the manager's own ID is always included for dummy data testing
+      // Guarantee the manager's own ID is always included
       if (!memberIds.includes(authUser.id)) {
         memberIds.push(authUser.id);
       }
@@ -164,9 +162,19 @@ export function useTeamMembers() {
       const { data: { user: authUser } } = await supabase.auth.getUser()
       if (!authUser) throw new Error('Not authenticated')
       
-      const { data, error } = await supabase
+      const { data: managerProfile } = await supabase
         .from('profiles')
-        .select('*');
+        .select('user_dpt, role')
+        .eq('id', authUser.id)
+        .single();
+
+      let query = supabase.from('profiles').select('*');
+      
+      if (managerProfile?.role !== 'admin' && managerProfile?.user_dpt) {
+        query = query.eq('user_dpt', managerProfile.user_dpt);
+      }
+
+      const { data, error } = await query;
         
       if (error) throw error
       return (data || []) as Profile[]

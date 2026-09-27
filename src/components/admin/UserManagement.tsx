@@ -46,6 +46,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function UserManagement() {
   const { data: users, isLoading } = useTeamMembers();
@@ -54,6 +61,7 @@ export function UserManagement() {
 
   const [activeTab, setActiveTab] = useState("invite");
   const [searchQuery, setSearchQuery] = useState("");
+  const [userToPromote, setUserToPromote] = useState<{id: string, name: string} | null>(null);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -309,20 +317,20 @@ export function UserManagement() {
                             <p className="px-4 py-3 text-[10px] uppercase font-black text-slate-400 tracking-[0.2em]">Change Permission</p>
                             {user.role === 'employee' ? (
                               <DropdownMenuItem 
-                                className="rounded-xl p-4 font-bold text-sm cursor-pointer hover:bg-indigo-50 hover:text-indigo-600 focus:bg-indigo-50 focus:text-indigo-600 gap-3 transition-all"
-                                onClick={() => updateRole({ targetUserId: user.id, newRole: 'manager' })}
+                                className="group rounded-xl p-4 font-bold text-sm cursor-pointer text-indigo-600 hover:bg-indigo-50 focus:bg-indigo-50 focus:text-indigo-600 gap-3 transition-all"
+                                onClick={() => setUserToPromote({ id: user.id, name: user.full_name || 'this user' })}
                                 disabled={isUpdating}
                               >
-                                <Shield className="w-4 h-4" />
+                                <Shield className="w-4 h-4 transition-all group-hover:fill-current group-focus:fill-current" />
                                 Promote to Manager
                               </DropdownMenuItem>
                             ) : user.role === 'manager' ? (
                               <DropdownMenuItem 
-                                className="rounded-xl p-4 font-bold text-sm cursor-pointer hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600 gap-3 transition-all"
+                                className="group rounded-xl p-4 font-bold text-sm cursor-pointer hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600 gap-3 transition-all"
                                 onClick={() => updateRole({ targetUserId: user.id, newRole: 'employee' })}
                                 disabled={isUpdating}
                               >
-                                <Shield className="w-4 h-4" />
+                                <Shield className="w-4 h-4 transition-all group-hover:fill-current group-focus:fill-current" />
                                 Demote to Employee
                               </DropdownMenuItem>
                             ) : null}
@@ -337,6 +345,31 @@ export function UserManagement() {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={!!userToPromote} onOpenChange={(open) => !open && setUserToPromote(null)}>
+        <DialogContent className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl  border border-gray-300">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-black tracking-tight text-slate-900 flex items-center justify-center">Confirm Promotion</DialogTitle>
+            <DialogDescription className="text-slate-500 font-medium mt-3 text-base">
+              Are you sure you want to change <strong className="text-slate-800">{userToPromote?.name}</strong> to managerial role? They will have access to team leave requests and approvals.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-3 mt-8">
+            <Button variant="outline" className="rounded-full px-8 font-bold border-2 border-[#0D1A2C] text-[#0D1A2C] hover:bg-[#0D1A2C] transition duration-300 hover:scale-105 hover:text-white" onClick={() => setUserToPromote(null)}>Cancel</Button>
+            <Button 
+              className="rounded-full px-8 bg-[#0D1A2C] transition duration-300 hover:scale-105 hover:bg-[#0D1A2C] text-white font-bold shadow-lg shadow-[#0D1A2C]"
+              onClick={() => {
+                if (userToPromote) {
+                  updateRole({ targetUserId: userToPromote.id, newRole: 'manager' });
+                  setUserToPromote(null);
+                }
+              }}
+            >
+              Yes, Promote
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

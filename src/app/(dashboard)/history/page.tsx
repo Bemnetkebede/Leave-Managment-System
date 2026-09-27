@@ -171,6 +171,12 @@ export default function HistoryArchivePage() {
                       <p className="text-xs text-slate-400 mt-0.5 truncate">
                         {new Date(req.start_date).toLocaleDateString()} → {new Date(req.end_date).toLocaleDateString()}
                       </p>
+                      {req.manager_note && (
+                        <div className="mt-1.5 bg-white/60 px-2.5 py-1.5 rounded-lg border border-emerald-100/50">
+                          <p className="text-[10px] text-emerald-600/80 font-bold uppercase tracking-wider mb-0.5">Manager Note:</p>
+                          <p className="text-xs text-slate-600 italic">"{req.manager_note}"</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                   {/* Right: Days + Badge */}
@@ -248,6 +254,12 @@ export default function HistoryArchivePage() {
                         <p className="text-xs text-slate-400 mt-0.5 truncate">
                           {new Date(req.start_date).toLocaleDateString()} → {new Date(req.end_date).toLocaleDateString()}
                         </p>
+                        {req.manager_note && (
+                          <div className={`mt-1.5 px-2.5 py-1.5 rounded-lg border ${isRejected ? 'bg-white/60 border-red-100/50' : 'bg-slate-100/50 border-slate-200/50'}`}>
+                            <p className={`text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isRejected ? 'text-red-600/80' : 'text-slate-500'}`}>Manager Note:</p>
+                            <p className="text-xs text-slate-600 italic">"{req.manager_note}"</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 

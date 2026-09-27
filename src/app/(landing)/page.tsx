@@ -1,38 +1,68 @@
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { DashboardPreview } from '@/components/landing/DashboardPreview';
+import { FeatureGrid } from '@/components/landing/FeatureGrid';
+import { WorkflowBreakdown } from '@/components/landing/WorkflowBreakdown';
+import { PlayCircle } from 'lucide-react';
 
-export default async function LandingPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  // If user is authenticated, they go to dashboard. Otherwise, they go to signup.
-  const primaryAction = user ? "/dashboard" : "/signup";
-
+export default function LandingPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 py-16 md:py-24 bg-white">
-      <div className="text-center max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-        <h1 className="text-5xl md:text-7xl font-black text-[#0D1A2C] tracking-tighter leading-[1.1]">
-          Modern <span className="text-indigo-500">Leave Management</span> for your team
+    <div className="pb-20 overflow-hidden relative">
+      
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+
+      {/* HERO SECTION */}
+      <section className="relative max-w-6xl mx-auto px-6 pt-24 pb-32 flex flex-col items-center text-center z-10">
+        
+
+
+        <h1 className="text-5xl md:text-6xl lg:text-[76px] font-black text-[#0f1b2d] leading-[1.05] tracking-tighter mb-6 max-w-4xl">
+          Modern <span className="text-[#685cf5]">Leave</span> <br className="hidden md:block" />
+          <span className="text-[#685cf5]">Management</span> for your
         </h1>
-        <p className="mt-8 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
-          Streamline time-off requests, track balances, and manage your team&apos;s
-          availability all in one place with our intuitive Leave Management System.
+        
+        <p className="text-lg md:text-xl text-slate-500 max-w-2xl mb-10 leading-relaxed">
+          Manage employee time-off, track team availability, and streamline approvals with unprecedented speed.
         </p>
-        <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link
-            href={primaryAction}
-            className="px-10 py-4 rounded-full bg-[#0D1A2C] text-white font-bold hover:bg-slate-800 hover:shadow-xl hover:shadow-slate-100 transition-all duration-300 transform hover:-translate-y-1 w-full sm:w-auto text-center"
-          >
+
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-20 w-full justify-center">
+          <Link href="/signup" className="w-full sm:w-auto px-8 py-3.5 bg-[#0f1b2d] text-white font-semibold rounded-full hover:bg-[#1a2b47] transition-colors shadow-sm flex items-center justify-center">
             Get Started
           </Link>
-          <Link
-            href={primaryAction}
-            className="px-10 py-4 rounded-full bg-white text-[#0D1A2C] border-2 border-slate-100 font-bold hover:border-indigo-100 hover:bg-indigo-50/30 transition-all duration-300 w-full sm:w-auto text-center"
-          >
+          <Link href="/demo" className="w-full sm:w-auto px-8 py-3.5 bg-white text-[#0f1b2d] font-semibold border border-slate-200 rounded-full hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
             View Dashboard
           </Link>
         </div>
-      </div>
+
+        <div className="w-full perspective-1000">
+           <DashboardPreview />
+        </div>
+      </section>
+
+      {/* CORE CAPABILITIES SECTION */}
+      <section id="curriculum" className="py-24 bg-slate-50/50  border-y border-slate-200/50 ">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-[#0f1b2d] mb-4">Core Leave Management Features</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">Everything you need to manage time-off requests, track team availability, and generate accurate reports in a single unified workspace.</p>
+          </div>
+          
+          <FeatureGrid />
+        </div>
+      </section>
+
+      {/* WORKFLOW BREAKDOWN SECTION */}
+      <section id="workflow" className="py-32">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl font-bold tracking-tight text-[#0f1b2d] mb-4">Inside the Engine</h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">A seamless pipeline from employee request to automatic balance updates.</p>
+          </div>
+
+          <WorkflowBreakdown />
+        </div>
+      </section>
+
     </div>
   );
 }

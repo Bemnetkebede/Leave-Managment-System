@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Bell, Search, X } from "lucide-react";
+import { Menu, Bell, Search, X, Settings, User, LogOut, Shield, Briefcase } from "lucide-react";
 import { Sidebar } from "./sidebar";
 import { cn } from "@/lib/utils";
 import {
@@ -115,26 +115,26 @@ export function Header() {
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-80 max-h-[400px] overflow-y-auto" align="end">
-            <DropdownMenuLabel className="font-bold border-b pb-2 mb-1">
+          <DropdownMenuContent className="w-80 max-h-[400px] overflow-y-auto bg-[#0D1A2C] border-slate-800 text-white" align="end">
+            <DropdownMenuLabel className="font-bold border-b border-slate-800 pb-2 mb-1 text-slate-100">
               Notifications
             </DropdownMenuLabel>
             {notifications?.length === 0 ? (
-              <div className="py-8 text-center text-slate-400 text-sm">
+              <div className="py-8 text-center text-slate-500 text-sm">
                 No notifications yet
               </div>
             ) : (
               notifications?.map((notif) => (
-                <DropdownMenuItem key={notif.id} className="flex flex-col items-start gap-1 p-3 cursor-pointer">
+                <DropdownMenuItem key={notif.id} className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-slate-800/50 focus:bg-slate-800/50 transition-colors">
                   <div className="flex justify-between w-full">
-                    <span className={cn("text-xs font-bold", !notif.read ? "text-indigo-600" : "text-slate-700")}>
+                    <span className={cn("text-xs font-bold", !notif.read ? "text-indigo-400" : "text-slate-300")}>
                       {notif.title}
                     </span>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-slate-500">
                       {formatDistanceToNow(new Date(notif.created_at), { addSuffix: true })}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 line-clamp-2">
+                  <p className="text-xs text-slate-400 line-clamp-2">
                     {notif.message}
                   </p>
                 </DropdownMenuItem>
@@ -157,26 +157,49 @@ export function Header() {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-semibold leading-none text-slate-900">
-                  {displayName}
-                </p>
-                <p className="text-xs leading-none text-slate-500">
-                  {profile?.email ?? ""}
-                </p>
+          <DropdownMenuContent className="w-72 bg-white p-2 border-slate-100 shadow-xl rounded-2xl" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal p-3 bg-slate-50 rounded-xl mb-2">
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-extrabold text-slate-900 tracking-tight">
+                    {displayName}
+                  </p>
+                  <span className="text-[10px] uppercase tracking-widest font-bold text-indigo-600 bg-indigo-100/50 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Shield className="w-3 h-3" />
+                    {profile?.role || "Employee"}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
+                    <Briefcase className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="capitalize">{profile?.user_dpt || "Unassigned Dept"}</span>
+                  </p>
+                  <p className="text-xs text-slate-500 font-medium flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-slate-400" />
+                    {profile?.email ?? ""}
+                  </p>
+                </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">Profile Setup</DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">Preferences</DropdownMenuItem>
-            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem className="cursor-pointer p-3 rounded-xl hover:bg-slate-50 focus:bg-slate-50 transition-colors mb-1 group">
+              <User className="w-4 h-4 mr-3 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+              <span className="font-semibold text-slate-700 group-hover:text-indigo-900">My Profile</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem className="cursor-pointer p-3 rounded-xl hover:bg-slate-50 focus:bg-slate-50 transition-colors mb-2 group">
+              <Settings className="w-4 h-4 mr-3 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+              <span className="font-semibold text-slate-700 group-hover:text-indigo-900">Preferences</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator className="bg-slate-100 mb-2" />
+            
             <DropdownMenuItem
-              className="text-red-600 cursor-pointer font-medium hover:bg-red-50 hover:text-red-700"
+              className="cursor-pointer p-3 rounded-xl hover:bg-red-50 focus:bg-red-50 transition-colors group"
               onClick={handleLogout}
             >
-              Log out
+              <LogOut className="w-4 h-4 mr-3 text-red-400 group-hover:text-red-600 transition-colors" />
+              <span className="font-bold text-red-600">Secure Logout</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

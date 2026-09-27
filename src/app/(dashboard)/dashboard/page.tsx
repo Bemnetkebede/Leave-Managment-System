@@ -15,8 +15,7 @@ export default function DashboardRouter() {
 
   useEffect(() => {
     if (!loading && profile) {
-      // FORCE manager role to prove the dashboard code wasn't overwritten
-      const role = "manager"; // profile.role || "employee";
+      const role = profile.role || "employee";
       console.log(`[DashboardRouter] Redirecting to /dashboard/${role}`);
       router.replace(`/dashboard/${role}`);
     }
